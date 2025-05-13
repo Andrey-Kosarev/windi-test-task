@@ -6,6 +6,8 @@ services:
     ports:
       - "5432:5432"
   webapp:
+    depends_on:
+      - database
     build:
       context: .
       dockerfile: src/entrypoints/webapp/Dockerfile
