@@ -1,5 +1,5 @@
-from core.models.user import User
-from core.models.message import Message
+from src.domain.models.user import User
+from src.domain.models.message import Message
 
 
 class Chat:

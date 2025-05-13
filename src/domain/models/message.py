@@ -1,6 +1,6 @@
 from datetime import datetime, timezone
 
-from core.models.user import User
+from src.domain.models.user import User
 
 
 class Message:
