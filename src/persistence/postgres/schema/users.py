@@ -1,5 +1,5 @@
 from sqlalchemy import Column, String, Integer
-from src.persistence.postgres.connection.metadata import metadata, Base
+from src.persistence.postgres.connection.metadata import Base
 
 
 class Users(Base):

@@ -2,7 +2,13 @@ FROM python:3.12.10-slim-bullseye
 WORKDIR /app
 
 RUN python3 -m pip install uv
-COPY . /app
+
+COPY pyproject.toml /app/
+COPY uv.lock /app/
 RUN uv sync
 
-CMD ["uv", "run", "uvicorn", "src.entrypoints.webapp.main:app", "--host", "0.0.0.0", "--port", "8000"]
+COPY . /app
+
+RUN chmod +x "./src/entrypoints/webapp/entrypoint.sh"
+CMD ["./src/entrypoints/webapp/entrypoint.sh"]
+# CMD ["ls", "."]

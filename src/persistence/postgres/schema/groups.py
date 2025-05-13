@@ -1,4 +1,4 @@
-from src.persistence.postgres.connection.metadata import metadata, Base
+from src.persistence.postgres.connection.metadata import Base
 from sqlalchemy import Column, Integer, String, ForeignKey
 
 

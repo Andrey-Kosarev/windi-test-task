@@ -1,5 +1,5 @@
 from sqlalchemy import Column, String, Integer
-from src.persistence.postgres.connection.metadata import Base, metadata
+from src.persistence.postgres.connection.metadata import Base
 
 class Chats(Base):
     __tablename__ = 'chats'

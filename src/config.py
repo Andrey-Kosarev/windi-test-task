@@ -10,4 +10,7 @@ class EnvConfig:
     POSTGRES_DB_PORT: int = int(os.getenv("POSTGRES_DB_PORT"))
 
 
+    def __post_init__(self):
+        self.DB_URL = f"postgresql+asyncpg://{self.POSTGRES_USER}:{self.POSTGRES_PASSWORD}@{self.POSTGRES_DB_ADDRESS}:{self.POSTGRES_DB_PORT}/{self.POSTGRES_DB}"
+
 ENV_CONFIG = EnvConfig()
