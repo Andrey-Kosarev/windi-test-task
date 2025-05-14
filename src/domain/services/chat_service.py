@@ -12,8 +12,8 @@ class ChatService:
     async def create_chat(self, name: str, participant_ids: list[int]) -> Chat:
         users = await self.user_repository.get(*participant_ids)
 
-        if self.user not in users:
-            users.append(self.user)
+        # if self.user not in users:
+        #     users.append(self.user)
 
         return await self.chat_repository.create(name, users)
 

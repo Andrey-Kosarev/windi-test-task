@@ -14,10 +14,15 @@ class UserPostgresRepository(IUserRepository):
         user_query = select(Users).where(Users.id.in_(ids))
         users_response = await self.session.execute(user_query)
 
-        for user_data in users_response.mappings().fetchall():
-            print(user_data)
+        users = []
 
-        return [User(id=userid, name="myname", email="e@mail.com", password="hashed") for userid in ids]
+        for user_data in users_response.mappings().fetchall():
+            user_object = user_data.get("Users")
+            users.append(
+                User(id=user_object.id, name=user_object.name, email=user_object.email, password=user_object.password)
+            )
+
+        return users
 
 
     def list(self, limit: int, offset: int):

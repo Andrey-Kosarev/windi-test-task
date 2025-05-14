@@ -1,9 +1,10 @@
 from typing import List
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import insert
+from sqlalchemy import insert, select
 
 from src.domain.models.chat import Chat
 from src.domain.models.user import User
+from src.persistence.postgres.schema import Users
 from src.ports.repositories.abc import IChatRepository
 from src.persistence.postgres.schema.chats import Chats, ChatParticipants
 
@@ -17,7 +18,24 @@ class ChatPostgresRepository(IChatRepository):
 
     async def get(self, *ids: int): ...
 
-    async def list(self, limit: int, offset: int): ...
+    async def list(self, limit: int, offset: int) -> list[Chat]:
+        chat_list_query = select(Chats).limit(limit).offset(offset)
+        chats_response = await self.session.execute(chat_list_query)
+
+        chats: dict[int: Chat] = {}
+        for (db_chat, ) in chats_response.fetchall():
+            chats[db_chat.id] = Chat(id=db_chat.id, name=db_chat.name, participants=[])
+
+        participants_list_query = select(Users, ChatParticipants.chat_id)\
+            .join(ChatParticipants, onclause=(Users.id == ChatParticipants.user_id))\
+            .where(ChatParticipants.chat_id.in_(chats.keys()))
+
+        participants_response = await self.session.execute(participants_list_query)
+
+        for user, chat_id in participants_response.fetchall():
+            chats[chat_id].participants.append(user)
+
+        return list(chats.values())
 
     async def create(self, name: str, participants: List[User]) -> Chat:
         store_chat_query = insert(Chats).values({Chats.name: name}).returning(Chats)
@@ -27,7 +45,7 @@ class ChatPostgresRepository(IChatRepository):
         new_chat = new_chat.get("Chats")
 
         store_participants_query = insert(ChatParticipants).values([
-            {ChatParticipants.user_id: user_id, ChatParticipants.chat_id: new_chat.id} for user_id in participants
+            {ChatParticipants.user_id: user.id, ChatParticipants.chat_id: new_chat.id} for user in participants
         ])
 
         await self.session.execute(store_participants_query)
