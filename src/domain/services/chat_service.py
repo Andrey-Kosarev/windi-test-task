@@ -5,18 +5,19 @@ from src.ports.repositories.abc import IChatRepository
 
 class ChatService:
     def __init__(self, repository: IChatRepository, user: User):
-        self.repository: IChatRepository = repository
+        self.chat_repository: IChatRepository = repository
+        self.user_repository = None
         self.user: User = user
 
-    async def create_chat(self, name: str, participants: list[User]) -> Chat:
-        return await self.repository.create(name, participants)
+    async def create_chat(self, name: str, participant_ids: list[int]) -> Chat:
+        return await self.chat_repository.create(name, participant_ids)
 
     async def get_chat(self, id_: int) -> Chat:
-        return await self.repository.get(id_)
+        return await self.chat_repository.get(id_)
 
     async def list_chats(self, limit: int, offset: int) -> list[Chat]:
-        return await self.repository.list(limit, offset)
+        return await self.chat_repository.list(limit, offset)
 
     async def delete_chat(self, chat_id: int):
-        return await self.repository.delete(chat_id)
+        return await self.chat_repository.delete(chat_id)
 

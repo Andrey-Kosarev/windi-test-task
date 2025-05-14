@@ -9,10 +9,10 @@ class Chats(Base):
 
 
 
-class ChatParticipant(Base):
-    __tablename__ = "chat_participant"
+class ChatParticipants(Base):
+    __tablename__ = "chat_participants"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    group_id = Column(Integer, ForeignKey("groups.id"), nullable=False)
+    chat_id = Column(Integer, ForeignKey("chats.id"), nullable=False)
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
 
