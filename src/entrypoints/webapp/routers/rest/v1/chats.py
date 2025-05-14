@@ -1,7 +1,6 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.domain.models.user import User
 from src.entrypoints.webapp.dependencies.database import get_db_session
 from src.entrypoints.webapp.dependencies.services import get_chat_service
 from src.entrypoints.webapp.models.chat import CreateChatModel

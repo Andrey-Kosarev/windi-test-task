@@ -3,6 +3,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import insert
 
 from src.domain.models.chat import Chat
+from src.domain.models.user import User
 from src.ports.repositories.abc import IChatRepository
 from src.persistence.postgres.schema.chats import Chats, ChatParticipants
 
@@ -14,11 +15,11 @@ class ChatPostgresRepository(IChatRepository):
     def _parse_chat_from_dict(self, chat: dict):
         ...
 
-    async def get(self, id_: int): ...
+    async def get(self, *ids: int): ...
 
     async def list(self, limit: int, offset: int): ...
 
-    async def create(self, name: str, participants: List[int]) -> Chat:
+    async def create(self, name: str, participants: List[User]) -> Chat:
         store_chat_query = insert(Chats).values({Chats.name: name}).returning(Chats)
 
         new_chat_record = await self.session.execute(store_chat_query)

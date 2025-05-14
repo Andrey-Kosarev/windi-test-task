@@ -1,5 +1,9 @@
+from dataclasses import dataclass
+from typing import Optional
+
+@dataclass(frozen=True)
 class User:
-    def __init__(self, userid: str):
-        self.userid = userid
-    
-    
+    name: str
+    email: str
+    password: str
+    id: Optional[int] = None

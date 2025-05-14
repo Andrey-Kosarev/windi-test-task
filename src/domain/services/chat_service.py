@@ -1,16 +1,21 @@
 from src.domain.models.user import User
 from src.domain.models.chat import Chat
-from src.ports.repositories.abc import IChatRepository
+from src.ports.repositories.abc import IChatRepository, IUserRepository
 
 
 class ChatService:
-    def __init__(self, repository: IChatRepository, user: User):
-        self.chat_repository: IChatRepository = repository
-        self.user_repository = None
+    def __init__(self, chat_repository: IChatRepository, user_repository: IUserRepository, user: User):
+        self.chat_repository: IChatRepository = chat_repository
+        self.user_repository: IUserRepository = user_repository
         self.user: User = user
 
     async def create_chat(self, name: str, participant_ids: list[int]) -> Chat:
-        return await self.chat_repository.create(name, participant_ids)
+        users = await self.user_repository.get(*participant_ids)
+
+        if self.user not in users:
+            users.append(self.user)
+
+        return await self.chat_repository.create(name, users)
 
     async def get_chat(self, id_: int) -> Chat:
         return await self.chat_repository.get(id_)

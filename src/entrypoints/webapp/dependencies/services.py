@@ -1,9 +1,17 @@
 from src.domain.models.user import User
 from src.domain.services.chat_service import ChatService
+from src.domain.services.user_service import UserService
 from src.persistence.postgres.repositories.chat import ChatPostgresRepository
 from sqlalchemy.ext.asyncio import AsyncSession
+
+from src.persistence.postgres.repositories.user import UserPostgresRepository
 
 
 def get_chat_service(session: AsyncSession) -> ChatService:
     chat_repository = ChatPostgresRepository(session)
-    return ChatService(chat_repository, User("1"))
+    user_repository = UserPostgresRepository(session)
+    return ChatService(chat_repository, user_repository, User("1", "", ""))
+
+def get_user_service(session: AsyncSession):
+    user_repository = UserPostgresRepository(session)
+    return UserService(user_repository)
