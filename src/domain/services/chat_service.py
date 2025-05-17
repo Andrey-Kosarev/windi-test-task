@@ -29,11 +29,12 @@ class ChatService:
     async def check_access(self, user_id: int, chat_id: int) -> Optional[Chat]:
         chat = await self.chat_repository.get(chat_id)
 
-        print(chat[0].participants)
-
         if user_id not in (p.id for p in chat[0].participants):
             return None
         return chat
+
+    async def get_history(self, chat_id: int, limit: int, offset: int):
+        return await self.message_repository.list(chat_id=chat_id, limit=limit, offset=offset)
 
     async def store_message(self, chat: Chat, message: Message):
         chat = await self.check_access(message.sender_id, chat_id=chat.id)

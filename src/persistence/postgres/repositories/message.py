@@ -4,7 +4,7 @@ from src.domain.models.message import Message
 from src.ports.repositories.abc import IMessageRepository
 from src.persistence.postgres.schema.messages import Messages
 
-from sqlalchemy import insert
+from sqlalchemy import insert, select, desc
 
 
 class MessagePostgresRepository(IMessageRepository):
@@ -14,8 +14,24 @@ class MessagePostgresRepository(IMessageRepository):
     async def get(self, *ids: int):
         pass
 
-    async def list(self, limit: int, offset: int):
-        pass
+    async def list(self, chat_id:int,  limit: int, offset: int) -> list[Message]:
+        query = select(Messages)\
+            .where(Messages.chat_id == chat_id)\
+            .limit(limit).offset(offset)\
+            .order_by(desc(Messages.timestamp))
+
+        message_records = (await self.session.execute(query)).fetchall()
+
+        return [
+            Message(
+                id=msg.id,
+                text=msg.text,
+                sender_id=msg.sender_id,
+                chat_id=msg.chat_id
+            ) for (msg, ) in message_records
+        ]
+
+
 
     async def create(self, message: Message) -> Message:
         insert_query = insert(Messages).values({

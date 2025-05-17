@@ -20,6 +20,13 @@ async def get_chat(chat_id: int,  db_session: AsyncSession = Depends(get_db_sess
     chat = await chat_service.get_chat(chat_id)
     return chat
 
+@chat_router.get("/{chat_id}/history")
+async def get_chat(chat_id: int,  db_session: AsyncSession = Depends(get_db_session)):
+    chat_service = get_chat_service(db_session)
+    chat = await chat_service.get_history(chat_id, 10, 0)
+    return chat
+
+
 
 @chat_router.post("/", response_model=ChatModel)
 async def create_chat(chat: CreateChatModel, db_session: AsyncSession = Depends(get_db_session)):
