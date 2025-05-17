@@ -16,7 +16,25 @@ class ChatPostgresRepository(IChatRepository):
     def _parse_chat_from_dict(self, chat: dict):
         ...
 
-    async def get(self, *ids: int): ...
+    async def get(self, *ids: int) -> list[Chat]:
+        chat_list_query = select(Chats).where(Chats.id.in_(ids))
+        chats_response = await self.session.execute(chat_list_query)
+
+        chats: dict[int: Chat] = {}
+        for (db_chat, ) in chats_response.fetchall():
+            chats[db_chat.id] = Chat(id=db_chat.id, name=db_chat.name, participants=[])
+
+        participants_list_query = select(Users, ChatParticipants.chat_id)\
+            .join(ChatParticipants, onclause=(Users.id == ChatParticipants.user_id))\
+            .where(ChatParticipants.chat_id.in_(chats.keys()))
+
+        participants_response = await self.session.execute(participants_list_query)
+
+        for user, chat_id in participants_response.fetchall():
+            chats[chat_id].participants.append(user)
+
+        return list(chats.values())
+
 
     async def list(self, limit: int, offset: int) -> list[Chat]:
         chat_list_query = select(Chats).limit(limit).offset(offset)

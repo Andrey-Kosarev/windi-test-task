@@ -25,7 +25,7 @@ class TrustAuthMiddleware:
         raw_headers = scope.get("headers", [])
 
         headers = {k.decode(): v.decode() for k, v in raw_headers}
-        user_id = headers.get("user_id", None)
+        user_id: str = headers.get("user_id", None)
 
         if user_id is None:
             if scope["type"] == "http":
@@ -35,5 +35,5 @@ class TrustAuthMiddleware:
                 await self._raise_error_ws(1008, send)
                 return
 
-        scope["user_id"] = user_id
+        scope["user_id"] = int(user_id)
         await self.app(scope, receive, send)

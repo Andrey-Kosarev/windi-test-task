@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 from typing import Optional
 
 from src.domain.models.chat import Chat
+from src.domain.models.message import Message
 from src.domain.models.user import User
 
 
@@ -31,5 +32,8 @@ class IUserRepository(IRepository, ABC):
     @abstractmethod
     async def create(self, user: User) -> User: ...
 
-class IMessageRepository(IRepository, ABC): ...
+class IMessageRepository(IRepository, ABC):
+    @abstractmethod
+    async def create(self, message: Message) -> Message: ...
+
 class IGroupRepository(IRepository, ABC): ...
