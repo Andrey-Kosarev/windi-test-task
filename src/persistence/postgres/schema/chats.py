@@ -5,8 +5,8 @@ class Chats(Base):
     __tablename__ = 'chats'
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    name = Column(String)
-    type = Column(String)
+    name = Column(String, nullable=False)
+    type = Column(String, nullable=False)
 
 
 
