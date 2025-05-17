@@ -6,6 +6,7 @@ class Chats(Base):
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String)
+    type = Column(String)
 
 
 
