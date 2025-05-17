@@ -31,7 +31,7 @@ async def get_chat(chat_id: int,  db_session: AsyncSession = Depends(get_db_sess
 @chat_router.post("/", response_model=ChatModel)
 async def create_chat(chat: CreateChatModel, db_session: AsyncSession = Depends(get_db_session)):
     chat_service = get_chat_service(db_session)
-    chat = await chat_service.create_chat(chat.name, chat.participants)
+    chat = await chat_service.create_chat(chat)
     return chat
 
 

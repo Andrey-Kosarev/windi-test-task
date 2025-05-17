@@ -26,7 +26,7 @@ class IRepository(ABC):
 
 class IChatRepository(IRepository, ABC):
     @abstractmethod
-    async def create(self, name: str, participants: list[User]) -> Chat: ...
+    async def create(self, chat: Chat) -> Chat: ...
 
 class IUserRepository(IRepository, ABC):
     @abstractmethod
@@ -40,4 +40,6 @@ class IMessageRepository(IRepository, ABC):
     async def list(self, chat_id: int, limit: int, offset: int) -> list[Message]: ...
 
 
-class IGroupRepository(IRepository, ABC): ...
+class IGroupRepository(IRepository, ABC):
+    @abstractmethod
+    async def create(self, chat: Chat, creator: User): ...

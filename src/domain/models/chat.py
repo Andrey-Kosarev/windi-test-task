@@ -3,8 +3,9 @@ from typing import Optional
 from src.domain.models.user import User
 
 
-@dataclass(frozen=True)
+@dataclass
 class Chat:
-    name:str
+    name: str
+    type: str
     participants: list[User]
     id: Optional[int] = None
