@@ -1,11 +1,12 @@
-from fastapi import Request
+from typing import Annotated
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Request, Query
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.entrypoints.webapp.dependencies.database import get_db_session
 from src.entrypoints.webapp.dependencies.services import ServiceFactory
 from src.entrypoints.webapp.models.chat import CreateChatModel, ChatModel
+from src.entrypoints.webapp.models.pagination import Pagination
 
 chat_router = APIRouter()
 
@@ -25,10 +26,10 @@ async def get_chat(chat_id: int,  request: Request,  db_session: AsyncSession = 
     return chat
 
 @chat_router.get("/{chat_id}/history")
-async def get_chat(chat_id: int, request: Request, db_session: AsyncSession = Depends(get_db_session)):
+async def get_chat(chat_id: int, p: Annotated[Pagination, Query()], request: Request, db_session: AsyncSession = Depends(get_db_session)):
     service_factory = ServiceFactory(db_session, request)
     chat_service = await service_factory.get_chat_service()
-    chat = await chat_service.get_history(chat_id, 10, 0)
+    chat = await chat_service.get_history(chat_id, p.limit, p.offset)
     return chat
 
 
