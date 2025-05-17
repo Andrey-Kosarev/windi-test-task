@@ -13,11 +13,13 @@ class ChatService:
 
     def __init__(
             self,
+            user: User,
             chat_repository: IChatRepository,
             user_repository: IUserRepository,
             message_repository: IMessageRepository,
             group_repository: IGroupRepository
     ):
+        self.user: User = user
         self.chat_repository: IChatRepository = chat_repository
         self.user_repository: IUserRepository = user_repository
         self.message_repository: IMessageRepository = message_repository
@@ -35,13 +37,15 @@ class ChatService:
         chat = await self.chat_repository.create(chat)
 
         if chat.type == "group":
-            await self.group_repository.create(chat,  User(id=1, name="a", email="", password="") )
+            await self.group_repository.create(chat, self.user)
 
         return chat
 
-    async def get_chat(self, chat_id: int) -> Chat:
-        chat = await self.chat_repository.get(chat_id)
-        return chat[0]
+    async def get_chat(self, chat_id: int) -> Optional[Chat]:
+        found_chats = await self.chat_repository.get(chat_id)
+        if not found_chats:
+            return None
+        return found_chats[0]
 
     async def check_access(self, user_id: int, chat_id: int) -> Optional[Chat]:
         chat = await self.chat_repository.get(chat_id)

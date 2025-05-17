@@ -3,7 +3,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.domain.exceptions.access import ChatAccessError
 from src.entrypoints.webapp.dependencies.database import get_db_session
-from src.entrypoints.webapp.dependencies.services import get_chat_service
+from src.entrypoints.webapp.dependencies.services import ServiceFactory
 from src.entrypoints.webapp.managers.chat_connection_manager import connection_manager
 from src.entrypoints.webapp.managers.chat_method_handlers.send_message_handler import SendMessageHandler
 from src.entrypoints.webapp.models.web_socket_payload import WebSocketPayload
@@ -19,7 +19,8 @@ handlers = {
 async def handle_chats(ws: WebSocket, db_session: AsyncSession = Depends(get_db_session)):
     user_id = ws.scope["user_id"]
     await connection_manager.connect(user_id, ws)
-    chat_service = get_chat_service(db_session)
+    service_factory = ServiceFactory(db_session, ws)
+    chat_service = await service_factory.get_chat_service()
     while True:
         raw_msg = await ws.receive_text()
         try:
