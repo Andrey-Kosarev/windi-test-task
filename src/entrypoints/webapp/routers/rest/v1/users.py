@@ -11,6 +11,6 @@ user_router = APIRouter()
 @user_router.post("/", response_model=UserModel)
 async def create_user(user: CreateUserModel, request: Request, db_session: AsyncSession = Depends(get_db_session)):
     service_factory = ServiceFactory(db_session, request)
-    service = await service_factory.get_user_service()
+    service = service_factory.get_user_service()
     created_user = await service.create_user(user.name, user.email, user.password)
     return created_user
