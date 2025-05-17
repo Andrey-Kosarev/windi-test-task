@@ -16,10 +16,8 @@ class SendMessageHandler:
         )
 
         chat = await chat_service.get_chat(message.chat_id)
-        await chat_service.store_message(chat, message_object)
-        await connection_manager.notify_chat(chat, {
-            "a": "b"
-        })
+        stored_message = await chat_service.store_message(chat, message_object)
+        await connection_manager.notify_chat(chat, stored_message.to_json())
 
         return "message_sent_successfully"
 

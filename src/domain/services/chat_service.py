@@ -57,12 +57,12 @@ class ChatService:
     async def get_history(self, chat_id: int, limit: int, offset: int):
         return await self.message_repository.list(chat_id=chat_id, limit=limit, offset=offset)
 
-    async def store_message(self, chat: Chat, message: Message):
+    async def store_message(self, chat: Chat, message: Message) -> Message:
         chat = await self.check_access(message.sender_id, chat_id=chat.id)
         if chat is None:
             raise ChatAccessError()
 
-        await self.message_repository.create(message)
+        return await self.message_repository.create(message)
 
     async def list_chats(self, limit: int, offset: int) -> list[Chat]:
         return await self.chat_repository.list(limit, offset)

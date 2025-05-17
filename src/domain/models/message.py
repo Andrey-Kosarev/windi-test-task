@@ -1,8 +1,7 @@
-from datetime import datetime, timezone
-from dataclasses import dataclass, field
+from datetime import datetime
+from dataclasses import dataclass, field, asdict
 from typing import Optional
-
-from src.domain.models.user import User
+import json
 
 @dataclass
 class Message:
@@ -12,3 +11,6 @@ class Message:
     id: Optional[int] = None
     timestamp: datetime =  field(default_factory=datetime.now)
     is_read: bool = False
+
+    def to_json(self) -> str:
+        return json.dumps(asdict(self), default=str)
