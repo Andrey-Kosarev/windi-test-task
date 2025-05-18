@@ -1,5 +1,5 @@
 # Запуск проекта:
-`docker compose up`
+`docker compose up --build`
 
 # Тестовые данные
 `uv run python3 generate_test_data.py `
@@ -19,7 +19,8 @@ URL: `ws://localhost:8000/ws/`
     "method": "send_message",
     "payload": {
         "text": "Всем привет",
-        "chat_id": 2
+        "chat_id": 2,
+        "idempotency_key":"{{$randomUUID}}"
     }
 }
 `
