@@ -2,7 +2,7 @@
 `docker compose up`
 
 # Тестовые данные
-`uv run python3 uv run python3 generate_test_data.py `
+`uv run python3 generate_test_data.py `
 или воспользоваться приложенной коллекцией Postman
 `REST.postman_collection.json`
 
