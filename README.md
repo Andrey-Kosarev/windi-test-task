@@ -14,6 +14,7 @@
 # Подключение к вэбсокету
 URL: `ws://localhost:8000/ws/`
 пример сообщений: 
+
 `{
     "method": "send_message",
     "payload": {
@@ -22,6 +23,7 @@ URL: `ws://localhost:8000/ws/`
     }
 }
 `
+
 `{
     "method": "read_message",
     "payload": {
