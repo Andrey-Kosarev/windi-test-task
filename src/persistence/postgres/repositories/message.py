@@ -29,7 +29,8 @@ class MessagePostgresRepository(IMessageRepository):
                 id=msg.id,
                 text=msg.text,
                 sender_id=msg.sender_id,
-                chat_id=msg.chat_id
+                chat_id=msg.chat_id,
+                is_read=msg.is_read
             ) for (msg, ) in message_records
         ]
 
