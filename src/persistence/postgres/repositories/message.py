@@ -53,7 +53,8 @@ class MessagePostgresRepository(IMessageRepository):
                 text=msg.text,
                 sender_id=msg.sender_id,
                 chat_id=msg.chat_id,
-                is_read=msg.is_read
+                is_read=msg.is_read,
+                idempotency_key=msg.idempotency_key
             ) for (msg, ) in message_records
         ]
 
