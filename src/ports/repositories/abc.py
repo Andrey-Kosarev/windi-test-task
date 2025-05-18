@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Optional
+from typing import Optional, List
 
 from src.domain.models.chat import Chat
 from src.domain.models.message import Message
@@ -38,6 +38,8 @@ class IMessageRepository(IRepository, ABC):
 
     @abstractmethod
     async def list(self, chat_id: int, limit: int, offset: int) -> list[Message]: ...
+
+    async def update(self, message_id: int, **kwargs) -> List[Message]: ...
 
 
 class IGroupRepository(IRepository, ABC):

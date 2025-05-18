@@ -1,10 +1,12 @@
+from typing import List
+
 from sqlalchemy.ext.asyncio.session import AsyncSession
 
 from src.domain.models.message import Message
 from src.ports.repositories.abc import IMessageRepository
 from src.persistence.postgres.schema.messages import Messages
 
-from sqlalchemy import insert, select, desc
+from sqlalchemy import insert, select, update, desc
 
 
 class MessagePostgresRepository(IMessageRepository):
@@ -57,8 +59,24 @@ class MessagePostgresRepository(IMessageRepository):
         return new_message
 
 
-    async def update(self, id_: int, **kwargs):
-        pass
+    async def update(self, message_id: int, **kwargs) -> List[Message]:
+        query = update(Messages).values(kwargs).where(Messages.id == message_id).returning(Messages)
+        db_response  = await self.session.execute(query)
+
+        updated_messages = list()
+        for (returned_message, ) in db_response.fetchall():
+            updated_messages.append(
+                Message(
+                    id=returned_message.id,
+                    text=returned_message.text,
+                    sender_id=returned_message.sender_id,
+                    timestamp=returned_message.timestamp,
+                    is_read=returned_message.is_read,
+                    chat_id=returned_message.chat_id
+                )
+            )
+
+        return updated_messages
 
     async def delete(self, id_: int):
         pass

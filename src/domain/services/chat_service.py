@@ -64,6 +64,13 @@ class ChatService:
 
         return await self.message_repository.create(message)
 
+    async def read_message(self, chat: Chat, message_id: int):
+        chat = await self.check_access(self.user.id, chat_id=chat.id)
+        if chat is None:
+            raise ChatAccessError()
+
+        return await self.message_repository.update(message_id, is_read=True)
+
     async def list_chats(self, limit: int, offset: int) -> list[Chat]:
         return await self.chat_repository.list(limit, offset)
 

@@ -5,6 +5,7 @@ from src.domain.exceptions.access import ChatAccessError
 from src.entrypoints.webapp.dependencies.database import get_db_session
 from src.entrypoints.webapp.dependencies.services import ServiceFactory
 from src.entrypoints.webapp.managers.chat_connection_manager import connection_manager
+from src.entrypoints.webapp.managers.chat_method_handlers.read_message_handler import ReadMessageHandler
 from src.entrypoints.webapp.managers.chat_method_handlers.send_message_handler import SendMessageHandler
 from src.entrypoints.webapp.models.web_socket_payload import WebSocketPayload
 
@@ -12,6 +13,7 @@ ws_router = APIRouter()
 
 handlers = {
     "send_message": SendMessageHandler,
+    "read_message": ReadMessageHandler,
 }
 
 
