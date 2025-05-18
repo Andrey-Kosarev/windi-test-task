@@ -1,8 +1,8 @@
 """init
 
-Revision ID: 2da7c9ea67ab
+Revision ID: 73182be1791f
 Revises: 
-Create Date: 2025-05-17 16:00:35.165034
+Create Date: 2025-05-18 12:10:33.668135
 
 """
 from typing import Sequence, Union
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = '2da7c9ea67ab'
+revision: str = '73182be1791f'
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -53,6 +53,7 @@ def upgrade() -> None:
     )
     op.create_table('messages',
     sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
+    sa.Column('idempotency_key', sa.UUID(), nullable=False),
     sa.Column('chat_id', sa.Integer(), nullable=False),
     sa.Column('sender_id', sa.Integer(), nullable=False),
     sa.Column('text', sa.String(), nullable=False),
@@ -60,7 +61,8 @@ def upgrade() -> None:
     sa.Column('is_read', sa.Boolean(), server_default='False', nullable=False),
     sa.ForeignKeyConstraint(['chat_id'], ['chats.id'], ),
     sa.ForeignKeyConstraint(['sender_id'], ['users.id'], ),
-    sa.PrimaryKeyConstraint('id')
+    sa.PrimaryKeyConstraint('id'),
+    sa.UniqueConstraint('idempotency_key')
     )
     # ### end Alembic commands ###
 

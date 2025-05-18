@@ -14,7 +14,8 @@ class SendMessageHandler(IWSHandler):
         message_object = Message(
             text=message.text,
             sender_id=user_id,
-            chat_id=message.chat_id
+            chat_id=message.chat_id,
+            idempotency_key=message.idempotency_key
         )
 
         chat = await chat_service.get_chat(message.chat_id)
@@ -22,7 +23,7 @@ class SendMessageHandler(IWSHandler):
         await connection_manager.notify_chat(chat, stored_message.to_json())
 
         return WebSocketResponsePayload(
-            method="read_message",
+            method="send_message",
             status="success",
             payload={
                 "data": stored_message

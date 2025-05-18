@@ -1,7 +1,7 @@
 from typing import Optional
 
 from src.domain.exceptions.access import ChatAccessError
-from src.domain.exceptions.validation import InvalidChatType, InvalidNumberOfParticipants
+from src.domain.exceptions.validation import InvalidChatType, InvalidNumberOfParticipants, DuplicateIdempotencyKey
 from src.domain.models.message import Message
 from src.domain.models.user import User
 from src.domain.models.chat import Chat

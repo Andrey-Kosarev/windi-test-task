@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 from typing import Optional, List
+from uuid import UUID
 
 from src.domain.models.chat import Chat
 from src.domain.models.message import Message
@@ -35,6 +36,8 @@ class IUserRepository(IRepository, ABC):
 class IMessageRepository(IRepository, ABC):
     @abstractmethod
     async def create(self, message: Message) -> Message: ...
+
+    async def get_by_idempotency_key(self, sender_id: int, key: UUID) -> Message: ...
 
     @abstractmethod
     async def list(self, chat_id: int, limit: int, offset: int) -> list[Message]: ...
