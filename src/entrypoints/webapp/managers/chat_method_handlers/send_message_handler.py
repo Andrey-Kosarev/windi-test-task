@@ -1,10 +1,12 @@
 from src.domain.models.message import Message
 from src.domain.services.chat_service import ChatService
 from src.entrypoints.webapp.managers.chat_connection_manager import connection_manager
+from src.entrypoints.webapp.managers.chat_method_handlers.abc import IWSHandler
 from src.entrypoints.webapp.models.message import MessagePayload
+from src.entrypoints.webapp.models.web_socket_payload import WebSocketResponsePayload
 
 
-class SendMessageHandler:
+class SendMessageHandler(IWSHandler):
     @staticmethod
     async def handle(chat_service: ChatService, user_id: int, message_payload: dict) -> str:
         message = MessagePayload(**message_payload)
@@ -19,5 +21,11 @@ class SendMessageHandler:
         stored_message = await chat_service.store_message(chat, message_object)
         await connection_manager.notify_chat(chat, stored_message.to_json())
 
-        return "message_sent_successfully"
+        return WebSocketResponsePayload(
+            method="read_message",
+            status="success",
+            payload={
+                "data": stored_message
+            }
+        ).model_dump_json()
 

@@ -5,13 +5,14 @@ from src.domain.exceptions.access import ChatAccessError
 from src.entrypoints.webapp.dependencies.database import get_db_session
 from src.entrypoints.webapp.dependencies.services import ServiceFactory
 from src.entrypoints.webapp.managers.chat_connection_manager import connection_manager
+from src.entrypoints.webapp.managers.chat_method_handlers.abc import IWSHandler
 from src.entrypoints.webapp.managers.chat_method_handlers.read_message_handler import ReadMessageHandler
 from src.entrypoints.webapp.managers.chat_method_handlers.send_message_handler import SendMessageHandler
 from src.entrypoints.webapp.models.web_socket_payload import WebSocketPayload
 
 ws_router = APIRouter()
 
-handlers = {
+handlers: dict[str, type[IWSHandler]] = {
     "send_message": SendMessageHandler,
     "read_message": ReadMessageHandler,
 }
@@ -27,13 +28,15 @@ async def handle_chats(ws: WebSocket, db_session: AsyncSession = Depends(get_db_
         raw_msg = await ws.receive_text()
         try:
             message = WebSocketPayload.model_validate_json(raw_msg)
-            handler = handlers.get(message.method, None)
+            handler: type[IWSHandler] = handlers.get(message.method, None)
             if handler is None:
                 await ws.send_text(f"Invalid method : {message.method}" )
                 continue
 
-            await handler.handle(chat_service, user_id, message.payload)
+            response = await handler.handle(chat_service, user_id, message.payload)
             await db_session.commit()
+            await connection_manager.send_message(user_id, response)
+
         except ChatAccessError:
             await connection_manager.send_message(user_id, {"error": "access denied"})
 
