@@ -18,7 +18,7 @@
 					}
 				],
 				"url": {
-					"raw": "http://localhost:8000/rest/v1/chats/2/",
+					"raw": "http://localhost:8000/rest/v1/chats/1/",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -28,7 +28,7 @@
 						"rest",
 						"v1",
 						"chats",
-						"2",
+						"1",
 						""
 					]
 				}
@@ -47,7 +47,7 @@
 					}
 				],
 				"url": {
-					"raw": "http://localhost:8000/rest/v1/chats/2/history?offset=0&limit=5",
+					"raw": "http://localhost:8000/rest/v1/chats/1/history?offset=0&limit=5",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -57,7 +57,7 @@
 						"rest",
 						"v1",
 						"chats",
-						"2",
+						"1",
 						"history"
 					],
 					"query": [
@@ -87,7 +87,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"name\": \"chat of friends group 22\",\r\n    \"participants\": [1,2, 3],\r\n    \"type\": \"group\"\r\n}",
+					"raw": "{\r\n    \"name\": \"chat of friends\",\r\n    \"participants\": [1,2, 3],\r\n    \"type\": \"group\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
