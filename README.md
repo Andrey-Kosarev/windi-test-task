@@ -12,7 +12,7 @@
 
 # Подключение к вэбсокету
 URL: `ws://localhost:8000/ws/`
-пример сообщения: 
+пример сообщений: 
 `{
     "method": "send_message",
     "payload": {
@@ -21,3 +21,10 @@ URL: `ws://localhost:8000/ws/`
     }
 }
 `
+`{
+    "method": "read_message",
+    "payload": {
+        "chat_id": 2,
+        "message_id": 16
+    }
+}`
